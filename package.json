@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "webpack-dev-server -d"
+    "start": "webpack-dev-server -d",
+    "server": "node src/server"
   },
   "author": "Greg",
   "license": "ISC",
@@ -19,6 +20,9 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "matter-js": "^0.13.0"
+    "matter-js": "^0.13.0",
+    "matter-tools": "^0.11.1",
+    "resurrect-js": "^1.0.1",
+    "ws": "^3.1.0"
   }
 }

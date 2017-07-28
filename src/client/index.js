@@ -1,25 +1,17 @@
-import _ from 'lodash';
-import * as Matter from 'matter-js';
+const ws = new WebSocket('ws://localhost:8080');
+import Resurrect from 'resurrect-js';
 
-// module aliases
-var Engine = Matter.Engine,
-  World = Matter.World,
-  Bodies = Matter.Bodies,
-  Composite = Matter.Composite;
+const necro = new Resurrect()
 
-// create an engine
-var engine = Engine.create();
+ws.onopen = function open() {
+  console.log("I opened it");
+};
 
-// create two boxes and a ground
-var boxA = Bodies.rectangle(400, 200, 80, 80);
-var boxB = Bodies.rectangle(450, 50, 80, 80);
-var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+var world = null;
 
-// add all of the bodies to the world
-World.add(engine.world, [boxA, boxB, ground]);
-
-// run the engine
-Engine.run(engine);
+ws.onmessage = function incoming(incomingMessage) {
+  world = necro.resurrect(incomingMessage.data)
+};
 
 var canvas = document.createElement('canvas'),
     context = canvas.getContext('2d');
@@ -30,29 +22,31 @@ canvas.height = 600;
 document.body.appendChild(canvas);
 
 (function render() {
-  var bodies = Composite.allBodies(engine.world);
-
   window.requestAnimationFrame(render);
 
-  context.fillStyle = '#000';
-  context.fillRect(0, 0, canvas.width, canvas.height);
+  if (world) {
+    var bodies = world.bodies;
 
-  context.beginPath();
+    context.fillStyle = '#000';
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-  bodies.forEach(body => {
-    const vertices = body.vertices;
-    context.moveTo(vertices[0].x, vertices[0].y);
+    context.beginPath();
 
-    vertices.slice(1, vertices.length).forEach(vertex => {
-      context.lineTo(vertex.x, vertex.y);
+    bodies.forEach(body => {
+      const vertices = body.vertices;
+      context.moveTo(vertices[0].x, vertices[0].y);
+
+      vertices.slice(1, vertices.length).forEach(vertex => {
+        context.lineTo(vertex.x, vertex.y);
+      });
+
+      context.lineTo(vertices[0].x, vertices[0].y);
+
+      context.lineWidth = 1;
+      context.strokeStyle = '#FFF';
+      context.stroke();
     });
-
-    context.lineTo(vertices[0].x, vertices[0].y);
-
-    context.lineWidth = 1;
-    context.strokeStyle = '#FFF';
-    context.stroke();
-  });
+  }
 })();
 
 const addKeyListener = (letter, downFunction, upFunction) => {
@@ -70,15 +64,14 @@ const addKeyListener = (letter, downFunction, upFunction) => {
 
 
 addKeyListener("a",
+  () => {},
   () => {
-    Matter.Body.setVelocity(boxA, {x: -1, y: 0})
-  },
-  () => Matter.Body.setVelocity(boxA, {x: 0, y: 0})
+    const socket = ws.send("blah");
+  }
 );
 
 addKeyListener("d",
   () => {
-    Matter.Body.setVelocity(boxA, {x: 1, y: 0})
   },
-  () => Matter.Body.setVelocity(boxA, {x: 0, y: 0})
+  () => {}
 );
