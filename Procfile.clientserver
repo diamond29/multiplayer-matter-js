@@ -1,1 +1,1 @@
-web: npm run client-heroku
+web: npm run client-heroku -- --env.heroku

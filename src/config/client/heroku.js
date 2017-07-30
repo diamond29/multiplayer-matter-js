@@ -1,4 +1,4 @@
 module.exports = {
-  gameServerAddress: "ws://powerfulpeak-client.herokuapp.com",
+  gameServerAddress: "ws://powerfulpeak-game.herokuapp.com",
   port: process.env.PORT,
 }
