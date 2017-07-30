@@ -6,7 +6,7 @@ const Matter = require('matter-js');
 global.HTMLElement = () => {};
 const { world, playerObject } = require('./shared/physics');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: process.env.PORT || '8080' });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
