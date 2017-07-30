@@ -7,7 +7,7 @@ const config = require('config');
 
 global.HTMLElement = () => {};
 const { world, playerObject } = require('./shared/physics');
-const PORT = config.gameServerPort;
+const PORT = config.port;
 
 const server = express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));

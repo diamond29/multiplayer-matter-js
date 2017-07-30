@@ -1,1 +1,1 @@
-web: npm run start -- --disable-host-check --host 0.0.0.0
+web: npm run client-heroku
