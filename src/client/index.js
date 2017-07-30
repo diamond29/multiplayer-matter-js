@@ -4,8 +4,7 @@ import config from 'config';
 const ws = new WebSocket(config.gameServerAddress);
 const necro = new Resurrect()
 
-ws.onopen = function open() {
-  console.log("I opened it");
+ws.onopen = function open(message) {
 };
 
 var world = null;
@@ -50,29 +49,17 @@ document.body.appendChild(canvas);
   }
 })();
 
-const addKeyListener = (letter, downFunction, upFunction) => {
+const addKeyListener = (letter) => {
   window.addEventListener('keydown', (keyDownEvent) => {
-    if (keyDownEvent.key === letter) {
-      downFunction();
-    }
+    ws.send(keyDownEvent);
   });
   window.addEventListener('keyup', (keyUpEvent) => {
-    if (keyUpEvent.key === letter) {
-      upFunction();
-    }
+    ws.send(keyUpEvent);
   });
 }
 
 
-addKeyListener("a",
-  () => {},
-  () => {
-    const socket = ws.send("blah");
-  }
-);
-
-addKeyListener("d",
-  () => {
-  },
-  () => {}
-);
+addKeyListener("w");
+addKeyListener("a");
+addKeyListener("s");
+addKeyListener("d");

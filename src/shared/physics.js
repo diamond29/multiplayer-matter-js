@@ -13,8 +13,10 @@ var engine = Engine.create();
 var boxA = Bodies.rectangle(400, 200, 80, 80);
 var boxB = Bodies.rectangle(450, 50, 80, 80);
 var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+var ceiling = Bodies.rectangle(400, 0, 810, 60, { isStatic: true });
+var leftWall = Bodies.rectangle(5, 305, 10, 40, { isStatic: true });
 
-const bodies = [boxA, boxB, ground];
+const bodies = [boxA, boxB, ground, ceiling];
 // add all of the bodies to the world
 World.add(engine.world, bodies);
 

@@ -9,7 +9,7 @@
 
     "client": "webpack-dev-server -d --config webpack.client.config.js --port 8000",
     "server-heroku": "webpack --env.heroku --config webpack.server.config.js && node dist/server.js",
-    "server": "webpack --config webpack.server.config.js && node dist/server.js"
+    "server": "webpack --config webpack.server.config.js && node --inspect dist/server.js"
   },
   "author": "Greg",
   "license": "ISC",

@@ -4,6 +4,7 @@ const Resurrect = require('resurrect-js');
 const Matter = require('matter-js');
 const express = require('express');
 const config = require('config');
+const Player = require('shared/player');
 
 global.HTMLElement = () => {};
 const { world, playerObject } = require('./shared/physics');
@@ -13,10 +14,16 @@ const server = express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const wss = new WebSocket.Server({server});
+var clients = [];
 
 wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(message) {
-    resetPlayerObject();
+  const newClient = { ws, isAlive: true, body: Player.createNewPlayer(world, {x: 100, y: 100}) }
+  ws.on('pong', () => { newClient.isAlive = true });
+
+  clients = clients.concat(newClient);
+
+  ws.on('message', (message) => {
+    console.log(message)
   });
 });
 
@@ -38,3 +45,17 @@ const resetPlayerObject = () => {
   console.log("reset");
   Matter.Body.setPosition(playerObject, { x: 400, y: 200 });
 }
+
+
+const interval = setInterval(function ping() {
+  const deadClients = _.remove(clients, client => !client.isAlive);
+  deadClients.forEach(client => {
+    client.ws.terminate()
+    Matter.Composite.remove(world, client.body);
+  });
+
+  clients.forEach(client => {
+    client.isAlive = false;
+    client.ws.ping('', false, true);
+  });
+}, 2000);
