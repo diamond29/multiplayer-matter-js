@@ -1,6 +1,7 @@
-const ws = new WebSocket('ws://localhost:8080');
 import Resurrect from 'resurrect-js';
+import config from 'config';
 
+const ws = new WebSocket(config.gameServerAddress);
 const necro = new Resurrect()
 
 ws.onopen = function open() {
