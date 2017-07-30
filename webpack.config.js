@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = function(env) {
-  const config = env.heroku ? 'heroku' : 'local'
+  const config = (env && env.heroku) ? 'heroku' : 'local'
 
   return {
     entry: './src/client/index.js',
@@ -29,7 +29,6 @@ module.exports = function(env) {
     devServer: {
       contentBase: path.join(__dirname, "dist"),
       compress: true,
-      port: 8000
     }
   };
 };

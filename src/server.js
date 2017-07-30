@@ -3,10 +3,11 @@ const _ = require('lodash');
 const Resurrect = require('resurrect-js');
 const Matter = require('matter-js');
 const express = require('express');
+const config = require('config');
 
 global.HTMLElement = () => {};
 const { world, playerObject } = require('./shared/physics');
-const PORT = process.env.PORT || '8080';
+const PORT = config.gameServerPort;
 
 const server = express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
