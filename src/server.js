@@ -14,6 +14,7 @@ const server = express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const wss = new WebSocket.Server({server});
+const necro = new Resurrect();
 var clients = [];
 
 wss.on('connection', function connection(ws) {
@@ -22,6 +23,7 @@ wss.on('connection', function connection(ws) {
 
   clients = clients.concat(newClient);
 
+  ws.send(necro.stringify({ type: 'connection', data: { bodyId: newClient.body.id }}));
   ws.on('message', (message) => {
     console.log(message)
   });
@@ -30,15 +32,13 @@ wss.on('connection', function connection(ws) {
 const broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
+      client.send(necro.stringify(data));
     }
   });
 };
 
-const necro = new Resurrect();
 setInterval(function() {
-  const serializedState = necro.stringify(world);
-  broadcast(serializedState);
+  broadcast({ type: 'world', data: world });
 }, 1000 / 30);
 
 const resetPlayerObject = () => {

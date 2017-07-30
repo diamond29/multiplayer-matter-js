@@ -8,9 +8,15 @@ ws.onopen = function open(message) {
 };
 
 var world = null;
+var playerBodyId = null;
 
 ws.onmessage = function incoming(incomingMessage) {
-  world = necro.resurrect(incomingMessage.data)
+  const deserializedMessage = necro.resurrect(incomingMessage.data);
+  if (deserializedMessage.type === 'world') {
+    world = deserializedMessage.data
+  } else if (deserializedMessage.type === 'connection') {
+    playerBodyId = deserializedMessage.data.bodyId
+  }
 };
 
 var canvas = document.createElement('canvas'),
@@ -30,9 +36,9 @@ document.body.appendChild(canvas);
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    context.beginPath();
 
     bodies.forEach(body => {
+      context.beginPath();
       const vertices = body.vertices;
       context.moveTo(vertices[0].x, vertices[0].y);
 
@@ -43,9 +49,12 @@ document.body.appendChild(canvas);
       context.lineTo(vertices[0].x, vertices[0].y);
 
       context.lineWidth = 1;
-      context.strokeStyle = '#FFF';
+      context.strokeStyle = body.id === playerBodyId ? 'red' : '#FFF';
+
       context.stroke();
+      context.closePath();
     });
+
   }
 })();
 
