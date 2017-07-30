@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client-heroku": "webpack-dev-server --config webpack.client.config.js --disable-host-check --host 0.0.0.0 --port $PORT",
+
     "client": "webpack-dev-server -d --config webpack.client.config.js --port 8000",
+    "server-heroku": "webpack --env.heroku --config webpack.server.config.js && node dist/server.js",
     "server": "webpack --config webpack.server.config.js && node dist/server.js"
   },
   "author": "Greg",
