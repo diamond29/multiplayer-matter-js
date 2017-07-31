@@ -58,17 +58,22 @@ document.body.appendChild(canvas);
   }
 })();
 
-const addKeyListener = (letter) => {
+const addKeyListener = (key) => {
   window.addEventListener('keydown', (keyDownEvent) => {
-    ws.send(keyDownEvent);
+    if (keyDownEvent.key === key) {
+      ws.send(necro.stringify({ type: 'keydown', data: { key } }));
+    }
   });
   window.addEventListener('keyup', (keyUpEvent) => {
-    ws.send(keyUpEvent);
+    if (keyUpEvent.key === key) {
+      ws.send(necro.stringify({ type: 'keyup', data: {  key }  }));
+    }
   });
 }
 
 
-addKeyListener("w");
-addKeyListener("a");
-addKeyListener("s");
-addKeyListener("d");
+addKeyListener(' ');
+addKeyListener('w');
+addKeyListener('a');
+addKeyListener('s');
+addKeyListener('d');

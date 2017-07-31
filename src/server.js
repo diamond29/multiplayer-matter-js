@@ -24,8 +24,27 @@ wss.on('connection', function connection(ws) {
   clients = clients.concat(newClient);
 
   ws.send(necro.stringify({ type: 'connection', data: { bodyId: newClient.body.id }}));
-  ws.on('message', (message) => {
-    console.log(message)
+  ws.on('message', (serializedMessage) => {
+    var message = {};
+    try {
+      message = necro.resurrect(serializedMessage);
+    } catch (e) {
+      console.log(`unable to parse client message: ${serializedMessage}`);
+    }
+    if (message.type === 'keyup') {
+      const magnitude = 0.025;
+      const forceMapping = {
+        d: { x: magnitude, y: 0 },
+        a: { x: -1 * magnitude, y: 0 },
+        w: { x: 0, y: -1 * magnitude },
+        s: { x: 0, y: magnitude },
+      }
+
+      const force = forceMapping[message.data.key];
+      if (force) {
+        Matter.Body.applyForce(newClient.body, newClient.body.position, force)
+      }
+    }
   });
 });
 

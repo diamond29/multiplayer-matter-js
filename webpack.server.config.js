@@ -13,6 +13,7 @@ module.exports = function(env) {
         path: path.resolve(__dirname, 'dist')
       },
       externals: [nodeExternals()],
+      devtool: 'eval-source-map',
     }
   );
 };
